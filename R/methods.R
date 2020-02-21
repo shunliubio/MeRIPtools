@@ -130,7 +130,7 @@ callPeakBinomial <- function(MeRIP, min_counts = 15, peak_cutoff_fdr = 0.05 , pe
   registerDoParallel( min( length( MeRIP@samplenames ) ,threads) )
   
   bino_pvalue <- foreach(j = 1:length( MeRIP@samplenames ), .combine = cbind )%dopar%{
-    .Bino_test( ip[,j], input[,j], T1[j], T0[j])
+    .Bino_test( ip[,j,drop=F], input[,j,drop=F], T1[j], T0[j])
   }
   
   
