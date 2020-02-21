@@ -31,8 +31,8 @@ callPeakFisher <- function(MeRIP, min_counts = 15, peak_cutoff_fdr = 0.05 , peak
   peak_call_batches <- foreach( i = 1:num_batch_ids, .combine = rbind)%dopar%{
 
     idx_batch <- which(geneBins$gene == batch_id_list[i])
-    batch_input <- input[idx_batch,drop=F]
-    batch_ip <- ip[idx_batch,drop=F]
+    batch_input <- input[idx_batch,,drop=F]
+    batch_ip <- ip[idx_batch,,drop=F]
     overall_input <- round( apply(batch_input, 2, median, na.rm = TRUE)  )
     overall_ip <- round( apply(batch_ip, 2, median, na.rm = TRUE)  )
 
@@ -49,7 +49,7 @@ callPeakFisher <- function(MeRIP, min_counts = 15, peak_cutoff_fdr = 0.05 , peak
 
     fisher_exact_test_fdr <- matrix(1,nrow = nrow(fisher_exact_test_p),ncol = ncol(fisher_exact_test_p))
     if(sum(rowSums(above_thresh_counts)> (length(overall_input)/2))>1){
-      fisher_exact_test_fdr[rowSums(above_thresh_counts)> (length(overall_input)/2) ,] <- apply(fisher_exact_test_p[which(rowSums(above_thresh_counts)> (length(overall_input)/2)) ,drop=F] , 2, p.adjust, method = 'fdr')
+      fisher_exact_test_fdr[rowSums(above_thresh_counts)> (length(overall_input)/2) ,] <- apply(fisher_exact_test_p[which(rowSums(above_thresh_counts)> (length(overall_input)/2)) ,,drop=F] , 2, p.adjust, method = 'fdr')
     }
 
     fisher_exact_test_peak <- (fisher_exact_test_fdr < peak_cutoff_fdr &
